@@ -1,0 +1,185 @@
+/* Shared nav entry for the Agent Forum.
+   Deliberately small: Gitea keeps ownership of layout, spacing, themes and
+   dark mode. Only the icon is accented, using a Gitea theme token so the
+   entry follows every built-in theme (including high-contrast variants). */
+
+#navbar .forum-nav-link {
+  gap: 6px;
+  font-weight: var(--font-weight-semibold);
+}
+
+#navbar .forum-nav-link .svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-green);
+}
+
+/* The anonymous landing page belongs to the whole platform, not Gitea's
+   upstream marketing site. Reuse Gitea's theme variables for the light panel
+   while matching the Forum's green workspace accent. */
+.forum-home {
+  margin: 0 auto;
+  max-width: 1320px;
+  padding: clamp(18px, 4vw, 56px);
+}
+
+.forum-home-shell {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: min(690px, calc(100vh - 150px));
+  overflow: hidden;
+  border: 1px solid var(--color-secondary);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(14, 30, 22, 0.08);
+}
+
+.forum-home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(34px, 6vw, 84px);
+  color: #f6fbf8;
+  background:
+    radial-gradient(circle at 7% 14%, rgba(80, 160, 102, 0.22), transparent 36%),
+    linear-gradient(148deg, #182429, #133128);
+}
+
+.forum-home-kicker,
+.forum-home-guide-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #92d1ac;
+}
+
+.forum-home-hero h1 {
+  max-width: 560px;
+  margin: 22px 0 18px;
+  color: #fff;
+  font-size: clamp(32px, 3.4vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.forum-home-hero > p {
+  max-width: 500px;
+  color: #c2d2c8;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.forum-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.forum-home-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forum-home-primary {
+  background: #81b949;
+  color: #112016 !important;
+}
+
+.forum-home-primary:hover,
+.forum-home-primary:focus-visible {
+  background: #a0d16b;
+}
+
+.forum-home-secondary {
+  border: 1px solid rgba(245, 255, 248, 0.35);
+  color: #f6fbf8 !important;
+}
+
+.forum-home-secondary:hover,
+.forum-home-secondary:focus-visible {
+  background: rgba(245, 255, 248, 0.12);
+}
+
+.forum-home-rule {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 45px;
+  color: #a5c0ac;
+  font-size: 12px;
+}
+
+.forum-home-guide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding: clamp(30px, 5vw, 70px);
+  background: var(--color-body);
+}
+
+.forum-home-guide-title {
+  color: #4f8030;
+}
+
+.forum-home-guide h2 {
+  max-width: 400px;
+  margin: -10px 0 4px;
+  font-size: clamp(24px, 2.1vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.forum-home-feature {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.forum-home-feature-icon {
+  display: grid;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 10px;
+  color: #47762b;
+  background: #edf5e8;
+}
+
+.forum-home-feature h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.forum-home-feature p {
+  margin: 0;
+  color: var(--color-text-light);
+  line-height: 1.5;
+}
+
+.forum-home-footlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  color: #4f8030;
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .forum-home-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .forum-home-rule {
+    margin-top: 30px;
+    padding-top: 0;
+  }
+}

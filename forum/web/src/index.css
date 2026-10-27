@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 222 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 30% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 12%;
+    --primary: 92 52% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 20% 95%;
+    --secondary-foreground: 222 30% 18%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 14% 44%;
+    --accent: 95 40% 94%;
+    --accent-foreground: 92 52% 23%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 18% 89%;
+    --input: 214 18% 86%;
+    --ring: 92 52% 34%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    outline-color: hsl(var(--ring));
+  }
+}
+
+@layer components {
+  .surface-grid {
+    background-image:
+      radial-gradient(circle at 18% 12%, hsl(92 52% 34% / 0.16), transparent 32%),
+      radial-gradient(circle at 82% 82%, hsl(160 40% 30% / 0.18), transparent 36%),
+      linear-gradient(hsl(222 30% 12%) 0%, hsl(160 25% 12%) 100%);
+  }
+
+  .surface-grid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(hsl(0 0% 100% / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 0% 100% / 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    pointer-events: none;
+  }
+
+  .prose-post {
+    @apply whitespace-pre-wrap break-words text-[0.9375rem] leading-6;
+  }
+}

@@ -1,0 +1,105 @@
+services:
+  gitea:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GOPROXY: https://goproxy.cn,direct
+    image: aeforum-gitea:demo
+    environment:
+      GITEA____APP_NAME: Agent Forum
+      GITEA__database__DB_TYPE: sqlite3
+      GITEA__server__DOMAIN: localhost
+      GITEA__server__ROOT_URL: http://localhost:3000/
+      GITEA__server__HTTP_PORT: '3000'
+      GITEA__server__SSH_DOMAIN: localhost
+      # The public origin is fixed (localhost:3000) and only the edge proxy
+      # can reach this container, so do not derive URLs from request headers.
+      GITEA__server__PUBLIC_URL_DETECTION: 'never'
+      GITEA__security__REVERSE_PROXY_TRUSTED_PROXIES: '172.16.0.0/12,127.0.0.0/8,::1/128'
+      GITEA__service__DISABLE_REGISTRATION: 'false'
+      GITEA__security__INSTALL_LOCK: 'true'
+      GITEA__security__SECRET_KEY: demo-local-only-secret-change-before-exposure
+      GITEA__security__INTERNAL_TOKEN: demo-local-only-internal-token-change-before-exposure
+    expose:
+      - '3000'
+    volumes:
+      - gitea-data:/data
+      # Supported extension points: a product landing template, additive
+      # navbar hooks and stylesheet; app.ini stays in the named volume.
+      - ./deploy/gitea/custom/templates/custom:/data/gitea/templates/custom:ro
+      - ./deploy/gitea/custom/templates/home.tmpl:/data/gitea/templates/home.tmpl:ro
+      - ./deploy/gitea/custom/public/assets/css:/data/gitea/public/assets/css:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:3000/api/healthz']
+      interval: 10s
+      timeout: 5s
+      retries: 24
+  forum:
+    build:
+      context: ./forum
+    image: aeforum-forum:demo
+    environment:
+      GITEA_URL: http://gitea:3000
+      GITEA_PUBLIC_URL: http://localhost:3000
+      FORUM_DB: /data/forum.sqlite3
+    ports:
+      # Direct API origin for the independent Forum CLI. Browsers use the
+      # same-origin /forum/ entry on the proxy below.
+      - '127.0.0.1:3001:3001'
+    volumes:
+      - forum-data:/data
+    depends_on:
+      gitea:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  a2a:
+    profiles: ['a2a']
+    build:
+      context: ./forum
+    image: aeforum-forum:demo
+    command: ['python', '-u', 'a2a_peer.py']
+    environment:
+      GITEA_URL: http://gitea:3000
+      GITEA_PUBLIC_URL: http://localhost:3000
+      A2A_AGENT_TOKEN: ${AGENT_A_WORK_TOKEN:-}
+      A2A_AGENT_NAME: demo-agent-a
+      A2A_PUBLIC_URL: http://localhost:3002
+      A2A_PORT: '3002'
+      A2A_DB: /data/a2a.sqlite3
+    ports:
+      - '127.0.0.1:3002:3002'
+    volumes:
+      - a2a-data:/data
+    depends_on:
+      gitea:
+        condition: service_healthy
+  proxy:
+    image: nginx:1.27.5-alpine
+    ports:
+      - '127.0.0.1:3000:80'
+    volumes:
+      - ./deploy/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      gitea:
+        condition: service_healthy
+      forum:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1/api/healthz']
+      interval: 15s
+      timeout: 5s
+      retries: 10
+volumes:
+  gitea-data:
+  forum-data:
+  a2a-data:

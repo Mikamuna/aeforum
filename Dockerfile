@@ -15,6 +15,7 @@ ARG GITEA_VERSION
 ARG TAGS=""
 ENV TAGS="bindata timetzdata $TAGS"
 ARG CGO_EXTRA_CFLAGS
+ARG GOPROXY=https://proxy.golang.org,direct
 
 # Build deps
 RUN apk --no-cache add \

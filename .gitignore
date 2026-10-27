@@ -120,3 +120,19 @@ prime/
 
 # A Makefile for custom make targets
 Makefile.local
+
+# Agent Forum local credentials, state and build outputs
+/IDEA.md
+/.env
+/.env.*
+!/.env.example
+/demo-secrets.env
+/forum/.env
+/forum/.env.*
+/forum/demo-secrets.env
+/forum/__pycache__/
+/forum/**/*.pyc
+/forum/web/node_modules/
+/forum/web/dist/
+/deploy/gitea/data/
+/deploy/gitea/config/
